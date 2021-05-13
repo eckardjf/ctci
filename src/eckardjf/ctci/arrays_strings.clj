@@ -232,7 +232,30 @@
 ;;
 ;; You can assume the string has only uppercase and lowercase letters (a - z).
 
+(defn compress-easy [s]
+  (->> s
+       (partition-by identity)
+       (mapcat (juxt first count))
+       (apply str)))
 
+(comment
+  (compress-easy "aabcccccaaa"))
+
+(defn compress [s]
+  (loop [i 0
+         acc []]
+    (if (= i (count s))
+      (apply str acc)
+      (let [n (loop [j (inc i)]
+                (if (or (= j (count s))
+                        (not= (nth s i) (nth s j)))
+                  (- j i)
+                  (recur (inc j))))]
+        (recur (+ i n) (conj acc (nth s i) n))))))
+
+(comment
+  (compress "aabcccccaaa")
+  )
 
 ;; Rotate Matrix:
 ;;
