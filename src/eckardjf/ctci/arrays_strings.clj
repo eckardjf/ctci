@@ -30,15 +30,18 @@
   )
 
 ;; O(n^2)
-(defn unique-chars-in-place [s]
+(defn unique-chars-in-place? [s]
   (loop [i 0]
     (if (= i (dec (count s)))
       true
-      (loop [j (inc i)]
-        (when (< j (count s))
-          (if (= (nth s i) (nth s j))
-            false
-            (recur (inc j))))))))
+      (if (loop [j (inc i)]
+            (if (= j (count s))
+              false
+              (if (= (nth s i) (nth s j))
+                true
+                (recur (inc j)))))
+        false
+        (recur (inc i))))))
 
 (comment
   (unique-chars-in-place? "abc")
