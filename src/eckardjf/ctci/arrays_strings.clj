@@ -242,16 +242,18 @@
   (compress-easy "aabcccccaaa"))
 
 (defn compress [s]
-  (loop [i 0
-         acc []]
-    (if (= i (count s))
-      (apply str acc)
-      (let [n (loop [j (inc i)]
-                (if (or (= j (count s))
-                        (not= (nth s i) (nth s j)))
-                  (- j i)
-                  (recur (inc j))))]
-        (recur (+ i n) (conj acc (nth s i) n))))))
+  (let [sb (StringBuilder.)]
+    (loop [i 0]
+      (if (= i (count s))
+        (.toString sb)
+        (let [n (loop [j (inc i)]
+                  (if (or (= j (count s))
+                          (not= (nth s i) (nth s j)))
+                    (- j i)
+                    (recur (inc j))))]
+          (.append sb (nth s i))
+          (.append sb n)
+          (recur (+ i n)))))))
 
 (comment
   (compress "aabcccccaaa")
